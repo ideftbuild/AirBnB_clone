@@ -25,3 +25,18 @@ class TestBaseModel(unittest.TestCase):
         bm1.save()
         current = bm1.updated_at
         self.assertNotEqual(previous, current)
+
+    def test_to_dict(self):
+        """Test if the to_dict method returns a dictionary"""
+        bm1 = BaseModel()
+        bm1.name = "model_test"
+        bm1.numbers = 11
+        bm1.save()
+        bm1_dict = bm1.to_dict()
+        self.assertIsInstance(bm1_dict, dict)
+        self.assertEqual(bm1_dict["name"], "model_test")
+        self.assertEqual(bm1_dict["numbers"], 11)
+        bm2 = BaseModel()
+        bm2_dict = bm2.to_dict()
+        self.assertIsInstance(bm2_dict, dict)
+        self.assertIsInstance(bm2_dict["created_at"], str)
