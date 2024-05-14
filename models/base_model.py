@@ -47,7 +47,22 @@ class BaseModel:
             self.created_at = datetime.now()
 
     def __str__(self):
-        return f'[{self.__class__.__name__}] ({self.id}) {self.__dict__}'
+        """Returns a string representation of the instance."""
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
+        from models import storage
+        """Saves the updated_at attribute with the current datetime."""
         self.updated_at = datetime.now()
+        storage.save()
+
+
+    def to_dict(self):
+        """Returns a dictionary containing all keys and values of __dict__.
+        and key __class__ with the class name.
+        """
+        dict_data = self.__dict__.copy()
+        dict_data['updated_at'] = self.updated_at.isoformat()
+        dict_data['created_at'] = self.created_at.isoformat()
+        dict_data['__class__'] = self.__class__.__name__
+        return dict_data
