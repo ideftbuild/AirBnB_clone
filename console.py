@@ -68,7 +68,12 @@ class HBNBCommand(cmd.Cmd):
         print(cleandoc(self.do_EOF.__doc__), '\n')
 
     def emptyline(self):
-        """Do not execute when an empty line + Enter is passed"""
+        """
+        NAME
+            emptyline - handle an empty line
+        SYNOPSIS
+            Called when an empty line or a line with spaces is entered
+        """
         return False
 
 
