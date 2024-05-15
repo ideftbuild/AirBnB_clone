@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """A module that defines a class called FileStorage"""
 
-import os
 import json
 
 
@@ -36,23 +35,23 @@ class FileStorage:
         self.__objects[key] = obj
 
     def save(self):
-        serialized_objects = {}
-        for key, value in self.__objects.items():
-            serialized_objects[key] = value.to_dict()
-
-        with open(self.__file_path, "a+") as file:
-            json.dump(serialized_objects, file)
+        """Serializes __objects to the JSON file (path: __file_path)"""
+        with open(self.__file_path, 'w', encoding='UTF-8') as file:
+            objs_to_dict = {k: v.to_dict() for k, v in self.__objects.items()}
+            json.dump(objs_to_dict, file, indent=4)
 
     def reload(self):
-        if os.path.isfile(self.__file_path):
-            with open(self.__file_path, "r") as file:
+        """Deserializes the structured JSON data set to instances"""
+        from models import classes
+        from os.path import isfile
+
+        if isfile(self.__file_path):
+            with open(self.__file_path, 'r', encoding='UTF-8') as json_file:
                 try:
-                    data = json.load(file)
-                    self.__objects = {}
-                    for key, value in data.items():
-                        cls_name, obj_id = key.split(".")
-                        class_obj = eval(cls_name)
-                        instance_obj = class_obj(**value)
-                        self.__objects[key] = instance_obj
-                except Exception:
+                    objs_dict = json.load(json_file)
+                    # convert dictionary to instance and update self.__objects
+                    for key, obj in objs_dict.items():
+                        objs_dict[key] = classes[obj['__class__']](**obj)
+                    self.__objects = objs_dict
+                except json.JSONDecodeError:  # file is not in JSON format
                     pass

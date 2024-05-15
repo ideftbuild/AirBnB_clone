@@ -7,8 +7,12 @@ Example:
     >>> print(bm1)  # doctest: +ELLIPSIS
         [BaseModel] (...) {...}
 """
+# related third party imports
 from datetime import datetime
 from uuid import uuid4
+
+# local imports
+import models
 
 
 class BaseModel:
@@ -45,6 +49,7 @@ class BaseModel:
             self.id = str(uuid4())
             self.updated_at = datetime.now()
             self.created_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance."""
@@ -54,14 +59,14 @@ class BaseModel:
         from models import storage
         """Saves the updated_at attribute with the current datetime."""
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """Returns a dictionary containing all keys and values of __dict__.
         and key __class__ with the class name.
         """
-        dict_data = self.__dict__.copy()
-        dict_data['updated_at'] = self.updated_at.isoformat()
-        dict_data['created_at'] = self.created_at.isoformat()
-        dict_data['__class__'] = self.__class__.__name__
-        return dict_data
+        new_dict = self.__dict__.copy()
+        new_dict['updated_at'] = self.updated_at.isoformat()
+        new_dict['created_at'] = self.created_at.isoformat()
+        new_dict['__class__'] = self.__class__.__name__
+        return new_dict
