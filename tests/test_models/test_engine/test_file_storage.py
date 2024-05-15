@@ -62,7 +62,6 @@ class TestFileStorage(TestCase):
 
     def test_reload(self):
         """Test if it correctly deserializes the JSON file to __objects"""
-        json_file = self.storage._FileStorage__file_path
 
         bm1 = BaseModel()
         self.storage.new(bm1)  # __objects is changed to it previous state

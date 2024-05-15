@@ -56,7 +56,6 @@ class BaseModel:
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
-        from models import storage
         """Saves the updated_at attribute with the current datetime."""
         self.updated_at = datetime.now()
         models.storage.save()
