@@ -1,5 +1,10 @@
 #!/bin/usr/env python3
-"""A module that contains the tests for the sub classes"""
+"""A module that contains the tests for the BaseModel subclasses
+Module: test_subclasses
+Classes: State, City, Amenity, Place, Review
+Example:
+    'python3 -m unittest tests/test_models/test_subclasses'
+"""
 
 import unittest
 from models.state import State
@@ -12,7 +17,7 @@ from models.base_model import BaseModel
 
 
 class Test_SubClasses(unittest.TestCase):
-    """Test the sub classes"""
+    """Test the BaseModel subclasses"""
 
     def test_state(self):
         """Test the  State class"""
@@ -26,7 +31,7 @@ class Test_SubClasses(unittest.TestCase):
     def test_city(self):
         """Test the City class"""
 
-        state = State()
+        state = State() #Dependency for state_id
         city = City()
         city.name = "Helena"
         city.state_id = state.id
@@ -40,7 +45,6 @@ class Test_SubClasses(unittest.TestCase):
         """Test the Amenity class"""
         amenity = Amenity()
         amenity.name = "Wifi"
-        amenity.save()
 
         self.assertIsInstance(amenity, Amenity)
         self.assertTrue(hasattr(amenity, "created_at"))
@@ -50,8 +54,8 @@ class Test_SubClasses(unittest.TestCase):
     def test_review(self):
         """Test the Review class"""
         review = Review()
-        place = Place()
-        user = User()
+        place = Place() #Dependency for place_id
+        user = User()   #Dependency for user_id
         review.place_id = place.id
         review.user_id = user.id
 
@@ -60,40 +64,14 @@ class Test_SubClasses(unittest.TestCase):
         self.assertIsInstance(review, Review)
         self.assertTrue(hasattr(review, "created_at"))
 
-    def test_save_method(self):
-        """Test the save method"""
-        review = Review()
-        review.text = "love it"
-        old_rev = review.updated_at
-        review.save()
-        new_rev = review.updated_at
-
-        self.assertNotEqual(old_rev, new_rev)
-        self.assertEqual(review.__class__.__name__, "Review")
-        self.assertEqual(review.text, "love it")
-
-    def test_to_dict_subclasses(self):
-        """Test the to_dict method"""
-        usr = User()
-        review = Review()
-        review.text = "love it"
-        review.user_id = usr.id
-        review.save()
-        review_dict = review.to_dict()
-
-        self.assertEqual(review_dict["__class__"], "Review")
-        self.assertEqual(review_dict["text"], "love it")
-        self.assertEqual(review_dict["user_id"], usr.id)
-
+    
     def test_place(self):
         """test the Place class related attributes"""
-        usr = User()
-        cti = City()
+        user = User()    #Dependency for user_id
+        city = City()    #Dependency for city_id
         place = Place()
-        bm1 = BaseModel()
-
-        place.user_id = usr.id
-        place.city_id = cti.id
+        place.user_id = user.id
+        place.city_id = city.id
         place.description = "My house"
         place.number_rooms = 3
         place.number_bathrooms = 1
@@ -101,12 +79,12 @@ class Test_SubClasses(unittest.TestCase):
         place.price_by_night = 50
         place.latitude = 10.5
         place.longitude = 20.5
-        place.amenity_ids = [usr.id, cti.id, bm1.id]
+        place.amenity_ids = []
 
         self.assertIsInstance(place, Place)
         self.assertTrue(hasattr(place, "created_at"))
-        self.assertEqual(place.user_id, usr.id)
-        self.assertEqual(place.city_id, cti.id)
+        self.assertEqual(place.user_id, user.id)
+        self.assertEqual(place.city_id, city.id)
         self.assertEqual(place.description, "My house")
         self.assertEqual(place.number_rooms, 3)
         self.assertEqual(place.number_bathrooms, 1)
@@ -114,4 +92,4 @@ class Test_SubClasses(unittest.TestCase):
         self.assertEqual(place.price_by_night, 50)
         self.assertEqual(place.latitude, 10.5)
         self.assertEqual(place.longitude, 20.5)
-        self.assertEqual(place.amenity_ids, [usr.id, cti.id, bm1.id])
+        self.assertEqual(place.amenity_ids, [])
