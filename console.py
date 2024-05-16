@@ -74,8 +74,8 @@ class HBNBCommand(cmd.Cmd):
             c: Flag to enable check for class.
             i: Flag to enable check for ID.
             n: Flag to enable check for instance.
-            v: Flag to enable check for attribute.
-            a: Flag to enable check for value.
+            a: Flag to enable check for attribute.
+            v: Flag to enable check for value.
 
         Returns:
             list: Tokens extracted from the input line otherwise None
