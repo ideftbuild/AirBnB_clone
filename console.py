@@ -150,7 +150,7 @@ class HBNBCommand(cmd.Cmd):
 
         Errors
         ------
-            `** class name missing **`   [class name] is not given.
+            `** class name missing **`  [class name] is not given.
             `** class doesn't exit`     [class name] isn't supported
         """
         tokens = self.parse_line(line, m=True, c=True)
@@ -183,7 +183,7 @@ class HBNBCommand(cmd.Cmd):
         ------
             `** class name missing **`  [class name] is not given.
             `** class doesn't exit`     [class name] isn't supported.
-            `** instance id missing **`  [id] is not given.
+            `** instance id missing **` [id] is not given.
             `** no instance found **`   The object with [id] isn't available .
         """
         tokens = self.parse_line(line, m=True, c=True, i=True, n=True)
@@ -214,7 +214,7 @@ class HBNBCommand(cmd.Cmd):
         ------
             `** class name missing **`  [class name] is not given.
             `** class doesn't exit`     [class name] isn't supported.
-            `** instance id missing **`  [id] is not given.
+            `** instance id missing **` [id] is not given.
             `** no instance found **`   The object with [id] isn't available .
 
         Notes
@@ -288,7 +288,7 @@ class HBNBCommand(cmd.Cmd):
         ------
             `** class name missing **`  [class name] is not given.
             `** class doesn't exit`     [class name] isn't supported.
-            `** instance id missing **`  [id] is not given.
+            `** instance id missing **` [id] is not given.
             `** no instance found **`   The object with [id] isn't available .
             `** attribute name missing **`  [attribute name] not given.
             `** value missing **`       [attribute value] not given
