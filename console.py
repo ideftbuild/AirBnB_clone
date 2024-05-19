@@ -32,6 +32,8 @@ from inspect import cleandoc
 # local imports
 import models
 
+import re
+
 
 class HBNBCommand(cmd.Cmd):
     """
