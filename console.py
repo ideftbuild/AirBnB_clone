@@ -23,6 +23,7 @@ Notes:
     - Refer to the HBNB documentation for a list of available commands and
     their usage.
 """
+
 # standard library imports
 import cmd
 
@@ -50,6 +51,7 @@ class HBNBCommand(cmd.Cmd):
     - do_destroy(line): Deletes a specific instance.
     - do_update(line): Updates or add an attribute of a specific instance.
     """
+
     prompt = "(hbnb) "
 
     def emptyline(self):
@@ -71,8 +73,7 @@ class HBNBCommand(cmd.Cmd):
         """
         return False
 
-    def parse_line(self, line, m=False, c=False, i=False,
-                   n=False, a=False, v=False):
+    def parse_line(self, line, m=False, c=False, i=False, n=False, a=False, v=False):
         """
         Tokenize the input line and perform optional checks.
 
@@ -92,20 +93,21 @@ class HBNBCommand(cmd.Cmd):
             Returns None if an error occurs.
         """
         from shlex import split
+
         # check for errors based on flags pass
         tokens = split(line)
-        if m and line == '':
-            print('** class name missing **')
+        if m and line == "":
+            print("** class name missing **")
         elif c and tokens[0] not in models.classes:
             print("** class doesn't exit **")
         elif i and len(tokens) < 2:
-            print('** instance id missing **')
-        elif n and f'{tokens[0]}.{tokens[1]}' not in models.storage.all():
-            print('** no instance found **')
+            print("** instance id missing **")
+        elif n and f"{tokens[0]}.{tokens[1]}" not in models.storage.all():
+            print("** no instance found **")
         elif a and len(tokens) < 3:
-            print('** attribute name missing **')
+            print("** attribute name missing **")
         elif v and len(tokens) < 4:
-            print('** value missing **')
+            print("** value missing **")
         else:
             return tokens  # success, all checks pass
 
@@ -127,7 +129,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def help_quit(self):
-        print(cleandoc(self.do_quit.__doc__), '\n')
+        print(cleandoc(self.do_quit.__doc__), "\n")
 
     def do_EOF(self, line):
         """
@@ -155,7 +157,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def help_EOF(self):
-        print(cleandoc(self.do_EOF.__doc__), '\n')
+        print(cleandoc(self.do_EOF.__doc__), "\n")
 
     def do_create(self, line):
         """
@@ -192,7 +194,7 @@ class HBNBCommand(cmd.Cmd):
             print(obj.id)
 
     def help_create(self):
-        print(cleandoc(self.do_create.__doc__), '\n')
+        print(cleandoc(self.do_create.__doc__), "\n")
 
     def do_show(self, line):
         """
@@ -226,10 +228,10 @@ class HBNBCommand(cmd.Cmd):
         """
         tokens = self.parse_line(line, m=True, c=True, i=True, n=True)
         if tokens:
-            print(models.storage.all()[f'{tokens[0]}.{tokens[1]}'])
+            print(models.storage.all()[f"{tokens[0]}.{tokens[1]}"])
 
     def help_show(self):
-        print(cleandoc(self.do_show.__doc__), '\n')
+        print(cleandoc(self.do_show.__doc__), "\n")
 
     def do_destroy(self, line):
         """
@@ -263,11 +265,11 @@ class HBNBCommand(cmd.Cmd):
         """
         tokens = self.parse_line(line, m=True, c=True, i=True, n=True)
         if tokens:
-            models.storage.all().pop(f'{tokens[0]}.{tokens[1]}')
+            models.storage.all().pop(f"{tokens[0]}.{tokens[1]}")
             models.storage.save()
 
     def help_destroy(self):
-        print(cleandoc(self.do_destroy.__doc__), '\n')
+        print(cleandoc(self.do_destroy.__doc__), "\n")
 
     def do_all(self, line):
         """
@@ -292,21 +294,21 @@ class HBNBCommand(cmd.Cmd):
         """
         objs = models.storage.all().values()
         objs_list = None
-        if line == '':  # all
+        if line == "":  # all
             objs_list = [str(obj) for obj in objs]
         else:  # all [class name]
             tokens = self.parse_line(line, m=True, c=True)
             if tokens:
-                objs_list = [str(obj) for obj in objs
-                             if obj.__class__.__name__ == tokens[0]]
+                objs_list = [
+                    str(obj) for obj in objs if obj.__class__.__name__ == tokens[0]
+                ]
         if objs_list:
             print(objs_list)
 
     def help_all(self):
-        print(cleandoc(self.do_all.__doc__), '\n')
+        print(cleandoc(self.do_all.__doc__), "\n")
 
     def do_update(self, line):
-
         """
         Name
         ----
@@ -339,8 +341,7 @@ class HBNBCommand(cmd.Cmd):
             `** attribute name missing **`  [attribute name] not given.
             `** value missing **`       [attribute value] not given
         """
-        tokens = self.parse_line(line, m=True, c=True, i=True,
-                                 n=True, a=True, v=True)
+        tokens = self.parse_line(line, m=True, c=True, i=True, n=True, a=True, v=True)
         if tokens:
             # convert to integer or float if possible
             try:
@@ -351,18 +352,13 @@ class HBNBCommand(cmd.Cmd):
                 except ValueError:
                     pass
             # update or add the attribute and it value
-            obj = models.storage.all()[f'{tokens[0]}.{tokens[1]}']
+            obj = models.storage.all()[f"{tokens[0]}.{tokens[1]}"]
             obj.__dict__.update({tokens[2]: tokens[3]})
             obj.save()
 
     def help_update(self):
-        print(cleandoc(self.do_update.__doc__), '\n')
+        print(cleandoc(self.do_update.__doc__), "\n")
 
 
-if __name__ == '__main__':
-    import sys
-    if sys.stdin.isatty():  # interactive mode
-        HBNBCommand().cmdloop()
-    else:  # non interactive mode
-        input_data = sys.stdin.read()
-        HBNBCommand().onecmd(input_data)
+if __name__ == "__main__":
+    HBNBCommand().cmdloop()
