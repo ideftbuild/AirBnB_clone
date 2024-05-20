@@ -100,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
         if m and line == "":
             print("** class name missing **")
         elif c and tokens[0] not in models.classes:
-            print("** class doesn't exit **")
+            print("** class doesn't exist **")
         elif i and len(tokens) < 2:
             print("** instance id missing **")
         elif n and f"{tokens[0]}.{tokens[1]}" not in models.storage.all():
