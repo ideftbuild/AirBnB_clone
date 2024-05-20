@@ -4,13 +4,13 @@ Module: test_review
 
 Unit test for the Review class
 """
-import unittest
+from unittest import TestCase
 from models.review import Review
 from models.place import Place
 from models.user import User
 
 
-class TestReview(unittest.TestCase):
+class TestReview(TestCase):
     """Test Review class"""
 
     def test_init_of_attributes(self):

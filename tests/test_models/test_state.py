@@ -4,11 +4,11 @@ Module: test_state
 
 Unit test for the State class.
 """
-import unittest
+from unittest import TestCase
 from models.state import State
 
 
-class TestState(unittest.TestCase):
+class TestState(TestCase):
     """Test State class"""
 
     def test_init_of_attributes(self):

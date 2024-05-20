@@ -4,11 +4,11 @@ Module: test_amenity
 
 Unit test for the Amenity class
 """
-import unittest
+from unittest import TestCase
 from models.amenity import Amenity
 
 
-class TestAmenity(unittest.TestCase):
+class TestAmenity(TestCase):
     """Test The Amenity class"""
 
     def test_init_of_attributes(self):

@@ -4,13 +4,13 @@ Module: test_place
 
 Unit test for the Place class.
 """
-import unittest
+from unittest import TestCase
 from models.place import Place
 from models.city import City
 from models.user import User
 
 
-class TestPlace(unittest.TestCase):
+class TestPlace(TestCase):
     """Test Place class"""
 
     def test_init_of_attributes(self):

@@ -4,12 +4,12 @@ Module: test_city
 
 Unit test for the City class.
 """
-import unittest
+from unittest import TestCase
 from models.city import City
 from models.state import State
 
 
-class TestCity(unittest.TestCase):
+class TestCity(TestCase):
     """Test City class"""
 
     def test_init_of_attributes(self):
