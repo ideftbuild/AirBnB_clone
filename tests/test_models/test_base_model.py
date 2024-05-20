@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import unittest
 from models.base_model import BaseModel
+from models import storage
 from datetime import datetime
 
 
@@ -65,3 +66,13 @@ class TestBaseModel(unittest.TestCase):
         bm2_dict = bm2.to_dict()
         self.assertIsInstance(bm2_dict, dict)
         self.assertIsInstance(bm2_dict["created_at"], str)
+
+    def test_save(self):
+        import os
+
+        bm = BaseModel()
+        bm.save()
+
+        file = storage._FileStorage__file_path
+        self.assertTrue(os.path.exists(file))
+        self.assertTrue(os.path.getsize(file) > 0)
