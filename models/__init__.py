@@ -11,9 +11,6 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 
-# import other classes here
-
-
 classes = {'BaseModel': BaseModel,
            'User': User,
            'State': State,
@@ -22,7 +19,6 @@ classes = {'BaseModel': BaseModel,
            'Amenity': Amenity,
            'Place': Place,
            'Review': Review,
-           # other class name: class
            }
 
 storage = FileStorage()
