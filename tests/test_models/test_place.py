@@ -6,22 +6,14 @@ Unit test for the Place class.
 """
 from unittest import TestCase
 from models.place import Place
-from models.city import City
-from models.user import User
 
 
 class TestPlace(TestCase):
     """Test Place class"""
 
-    def test_init_of_attributes(self):
+    def test_attributes(self):
         """Test it class attributes"""
-        # Dependency for user_id
-        user = User()
-        # Dependency for city_id
-        city = City()
         place = Place()
-        place.user_id = user.id
-        place.city_id = city.id
         place.description = "My house"
         place.number_rooms = 3
         place.number_bathrooms = 1
@@ -33,8 +25,8 @@ class TestPlace(TestCase):
 
         self.assertIsInstance(place, Place)
         self.assertTrue(hasattr(place, "created_at"))
-        self.assertEqual(place.user_id, user.id)
-        self.assertEqual(place.city_id, city.id)
+        self.assertEqual(place.user_id, '')
+        self.assertEqual(place.city_id, '')
         self.assertEqual(place.description, "My house")
         self.assertEqual(place.number_rooms, 3)
         self.assertEqual(place.number_bathrooms, 1)

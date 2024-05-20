@@ -75,3 +75,4 @@ class TestFileStorage(TestCase):
 
         self.assertEqual(obj_prev_state.keys(), self.storage.all().keys())
         self.assertIsInstance(self.storage.all(), dict)
+

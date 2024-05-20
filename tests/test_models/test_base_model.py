@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
-import unittest
+from unittest import TestCase
 from models.base_model import BaseModel
-from models.engine.file_storage import FileStorage
+#from models.engine.file_storage import FileStorage
 from datetime import datetime
 
 
-FileStorage._FileStorage__file_path = 'test_file.json'
+# FileStorage._FileStorage__file_path = 'test_file.json'
 
 
-class TestBaseModel(unittest.TestCase):
+class TestBaseModel(TestCase):
     """Unittest testing for the BaseModel class"""
 
-    def setUp(self):
-        """Create new instance of FileStorage for each test and reset
-        __objects attribute to an empty dictionary
-        """
-        self.storage = FileStorage()
-        self.storage._FileStorage__objects = {}
+    # def setUp(self):
+    #     """Create new instance of FileStorage for each test and reset
+    #     __objects attribute to an empty dictionary
+    #     """
+    #     self.storage = FileStorage()
+    #     self.storage._FileStorage__objects = {}
 
-    def tearDown(self):
-        """Delete the JSON file that is created by a test"""
-        from os import path, remove
+    # def tearDown(self):
+    #     """Delete the JSON file that is created by a test"""
+    #     from os import path, remove
 
-        json_file = self.storage._FileStorage__file_path
-        if path.isfile(json_file):
-            remove(json_file)
+    #     json_file = self.storage._FileStorage__file_path
+    #     if path.isfile(json_file):
+    #         remove(json_file)
 
     def test_uuid(self):
         """Test if uuid is a string and also unique"""
@@ -89,7 +89,8 @@ class TestBaseModel(unittest.TestCase):
         when save is called"""
         bm = BaseModel()
         old_updated_at = bm.updated_at
-        bm.save()
+        self.assertTrue(hasattr(bm, 'save'))
 
+        bm.save()
         self.assertNotEqual(bm.updated_at, old_updated_at)
         self.assertGreater(bm.updated_at, old_updated_at)

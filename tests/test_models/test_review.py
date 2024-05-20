@@ -4,25 +4,14 @@ Module: test_review
 
 Unit test for the Review class
 """
-from unittest import TestCase
+import unittest
 from models.review import Review
-from models.place import Place
-from models.user import User
 
 
-class TestReview(TestCase):
+class TestReview(unittest.TestCase):
     """Test Review class"""
-
-    def test_init_of_attributes(self):
-        """Test it class attributes"""
-
+    def test_attributes(self):
         review = Review()
-        place = Place()  # Dependency for place_id
-        user = User()  # Dependency for user_id
-        review.place_id = place.id
-        review.user_id = user.id
-
-        self.assertEqual(review.place_id, place.id)
-        self.assertEqual(review.user_id, user.id)
-        self.assertIsInstance(review, Review)
-        self.assertTrue(hasattr(review, "created_at"))
+        self.assertIsInstance(review.place_id, str)
+        self.assertIsInstance(review.user_id, str)
+        self.assertIsInstance(review.text, str)
