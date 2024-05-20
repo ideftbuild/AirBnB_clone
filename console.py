@@ -73,7 +73,8 @@ class HBNBCommand(cmd.Cmd):
         """
         return False
 
-    def parse_line(self, line, m=False, c=False, i=False, n=False, a=False, v=False):
+    def parse_line(
+            self, line, m=False, c=False, i=False, n=False, a=False, v=False):
         """
         Tokenize the input line and perform optional checks.
 
@@ -300,7 +301,9 @@ class HBNBCommand(cmd.Cmd):
             tokens = self.parse_line(line, m=True, c=True)
             if tokens:
                 objs_list = [
-                    str(obj) for obj in objs if obj.__class__.__name__ == tokens[0]
+                    str(obj)
+                    for obj in objs
+                    if obj.__class__.__name__ == tokens[0]
                 ]
         if objs_list:
             print(objs_list)
@@ -341,7 +344,8 @@ class HBNBCommand(cmd.Cmd):
             `** attribute name missing **`  [attribute name] not given.
             `** value missing **`       [attribute value] not given
         """
-        tokens = self.parse_line(line, m=True, c=True, i=True, n=True, a=True, v=True)
+        tokens = self.parse_line(
+            line, m=True, c=True, i=True, n=True, a=True, v=True)
         if tokens:
             # convert to integer or float if possible
             try:

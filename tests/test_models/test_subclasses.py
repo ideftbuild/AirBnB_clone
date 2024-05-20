@@ -13,7 +13,6 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models.user import User
-from models.base_model import BaseModel
 
 
 class Test_SubClasses(unittest.TestCase):
@@ -21,6 +20,7 @@ class Test_SubClasses(unittest.TestCase):
 
     def test_state(self):
         """Test the  State class"""
+
         state = State()
         state.name = "Montana"
         self.assertIsInstance(state, State)
@@ -31,7 +31,7 @@ class Test_SubClasses(unittest.TestCase):
     def test_city(self):
         """Test the City class"""
 
-        state = State() #Dependency for state_id
+        state = State()  # Dependency for state_id
         city = City()
         city.name = "Helena"
         city.state_id = state.id
@@ -43,6 +43,7 @@ class Test_SubClasses(unittest.TestCase):
 
     def test_amenity(self):
         """Test the Amenity class"""
+
         amenity = Amenity()
         amenity.name = "Wifi"
 
@@ -53,9 +54,10 @@ class Test_SubClasses(unittest.TestCase):
 
     def test_review(self):
         """Test the Review class"""
+
         review = Review()
-        place = Place() #Dependency for place_id
-        user = User()   #Dependency for user_id
+        place = Place()  # Dependency for place_id
+        user = User()  # Dependency for user_id
         review.place_id = place.id
         review.user_id = user.id
 
@@ -64,11 +66,12 @@ class Test_SubClasses(unittest.TestCase):
         self.assertIsInstance(review, Review)
         self.assertTrue(hasattr(review, "created_at"))
 
-    
     def test_place(self):
         """test the Place class related attributes"""
-        user = User()    #Dependency for user_id
-        city = City()    #Dependency for city_id
+        # Dependency for user_id
+        user = User()
+        # Dependency for city_id
+        city = City()
         place = Place()
         place.user_id = user.id
         place.city_id = city.id

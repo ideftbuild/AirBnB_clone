@@ -3,11 +3,11 @@
 
 from models.base_model import BaseModel
 
+
 class Amenity(BaseModel):
     """A class that inherit from BaseModel.
-    
-        Public attributes:
-        name(str): empty string
-        """
+    Public attributes:
+    name(str): empty string
+    """
+
     name = ""
-    
