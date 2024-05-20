@@ -37,8 +37,9 @@ class FileStorage:
     def save(self):
         """Serializes __objects to the JSON file (path: __file_path)"""
         with open(self.__file_path, 'w', encoding='UTF-8') as file:
-            objs_to_dict = {k: v.to_dict() for k, v in self.__objects.items()}
-            json.dump(objs_to_dict, file, indent=4)
+            objs_dict = {ID: obj.to_dict() for ID, obj in
+                         self.__objects.items()}
+            json.dump(objs_dict, file)
 
     def reload(self):
         """Deserializes the structured JSON data set to instances"""
@@ -48,10 +49,10 @@ class FileStorage:
         if isfile(self.__file_path):
             with open(self.__file_path, 'r', encoding='UTF-8') as json_file:
                 try:
-                    objs_dict = json.load(json_file)
+                    objs = json.load(json_file)
                     # convert dictionary to instance and update self.__objects
-                    for key, obj in objs_dict.items():
-                        objs_dict[key] = classes[obj['__class__']](**obj)
-                    self.__objects = objs_dict
+                    for ID, obj_dict in objs.items():
+                        objs[ID] = classes[obj_dict['__class__']](**obj_dict)
+                        self.__objects = objs
                 except json.JSONDecodeError:  # file is not in JSON format
                     pass
