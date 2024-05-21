@@ -23,17 +23,15 @@ Notes:
     - Refer to the HBNB documentation for a list of available commands and
     their usage.
 """
-
 # standard library imports
 import cmd
+import re
 
 # related third party imports
 from inspect import cleandoc
 
 # local imports
 import models
-
-import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -50,9 +48,42 @@ class HBNBCommand(cmd.Cmd):
     - do_show(line): Prints details of a specific instance.
     - do_destroy(line): Deletes a specific instance.
     - do_update(line): Updates or add an attribute of a specific instance.
+    - count(class_name): count the number of instances from a class.
     """
-
     prompt = "(hbnb) "
+
+    def default(self, line):
+        """Handle custom commands
+        Synopsis
+        -------
+            <class name>.method()
+        """
+        tokens = line.strip().split('.', 1)
+        class_name = tokens[0]
+        # possible class name method command found
+        if class_name in models.classes and len(tokens) > 1:
+            method = tokens[1]
+            arg_list = self.extract_all(method)
+            cmd_dict = {'all': self.do_all,
+                        'count': self.count,
+                        'show': self.do_show,
+                        'destroy': self.do_destroy,
+                        'update': self.do_update
+                        }
+
+            cmd_name = method[:method.find('(')]
+            if cmd_name == 'update' and len(arg_list) == 2:
+                obj = self.string_to_dict(arg_list[1])
+                # treat 'update' differently when a dictionary is passed
+                if obj is not None:
+                    arg_list[1] = obj
+                    arg_list.insert(0, class_name)
+                    return self.update_with_dict(arg_list)
+            if cmd_name in cmd_dict:
+                line = class_name + ' ' + ' '.join(arg_list)
+                return cmd_dict[cmd_name](line.strip())
+
+        super().default(line)
 
     def emptyline(self):
         """
@@ -73,45 +104,6 @@ class HBNBCommand(cmd.Cmd):
         """
         return False
 
-    def parse_line(
-            self, line, m=False, c=False, i=False, n=False, a=False, v=False):
-        """
-        Tokenize the input line and perform optional checks.
-
-        All checks are disabled by default and can be enabled by the caller.
-
-        Args:
-            line (str): The input line to be tokenized.
-            m (bool): Flag to enable check for missing class.
-            c (bool): Flag to enable check for class.
-            i (bool): Flag to enable check for ID.
-            n (bool): Flag to enable check for instance.
-            a (bool): Flag to enable check for attribute.
-            v (bool): Flag to enable check for value.
-
-        Returns:
-            list: Tokens extracted from the input line.
-            Returns None if an error occurs.
-        """
-        from shlex import split
-
-        # check for errors based on flags pass
-        tokens = split(line)
-        if m and line == "":
-            print("** class name missing **")
-        elif c and tokens[0] not in models.classes:
-            print("** class doesn't exist **")
-        elif i and len(tokens) < 2:
-            print("** instance id missing **")
-        elif n and f"{tokens[0]}.{tokens[1]}" not in models.storage.all():
-            print("** no instance found **")
-        elif a and len(tokens) < 3:
-            print("** attribute name missing **")
-        elif v and len(tokens) < 4:
-            print("** value missing **")
-        else:
-            return tokens  # success, all checks pass
-
     def do_quit(self, line):
         """
         Name
@@ -130,7 +122,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def help_quit(self):
-        print(cleandoc(self.do_quit.__doc__), "\n")
+        print(cleandoc(self.do_quit.__doc__), '\n')
 
     def do_EOF(self, line):
         """
@@ -158,7 +150,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def help_EOF(self):
-        print(cleandoc(self.do_EOF.__doc__), "\n")
+        print(cleandoc(self.do_EOF.__doc__), '\n')
 
     def do_create(self, line):
         """
@@ -195,7 +187,7 @@ class HBNBCommand(cmd.Cmd):
             print(obj.id)
 
     def help_create(self):
-        print(cleandoc(self.do_create.__doc__), "\n")
+        print(cleandoc(self.do_create.__doc__), '\n')
 
     def do_show(self, line):
         """
@@ -229,10 +221,10 @@ class HBNBCommand(cmd.Cmd):
         """
         tokens = self.parse_line(line, m=True, c=True, i=True, n=True)
         if tokens:
-            print(models.storage.all()[f"{tokens[0]}.{tokens[1]}"])
+            print(models.storage.all()[f'{tokens[0]}.{tokens[1]}'])
 
     def help_show(self):
-        print(cleandoc(self.do_show.__doc__), "\n")
+        print(cleandoc(self.do_show.__doc__), '\n')
 
     def do_destroy(self, line):
         """
@@ -266,11 +258,11 @@ class HBNBCommand(cmd.Cmd):
         """
         tokens = self.parse_line(line, m=True, c=True, i=True, n=True)
         if tokens:
-            models.storage.all().pop(f"{tokens[0]}.{tokens[1]}")
+            models.storage.all().pop(f'{tokens[0]}.{tokens[1]}')
             models.storage.save()
 
     def help_destroy(self):
-        print(cleandoc(self.do_destroy.__doc__), "\n")
+        print(cleandoc(self.do_destroy.__doc__), '\n')
 
     def do_all(self, line):
         """
@@ -294,24 +286,22 @@ class HBNBCommand(cmd.Cmd):
             `** class doesn't exit` [class name] isn't supported.
         """
         objs = models.storage.all().values()
-        objs_list = None
-        if line == "":  # all
-            objs_list = [str(obj) for obj in objs]
+        obj_list = None
+        if line == '':  # all
+            obj_list = [str(obj) for obj in objs]
         else:  # all [class name]
             tokens = self.parse_line(line, m=True, c=True)
             if tokens:
-                objs_list = [
-                    str(obj)
-                    for obj in objs
-                    if obj.__class__.__name__ == tokens[0]
-                ]
-        if objs_list:
-            print(objs_list)
+                obj_list = [str(obj) for obj in objs
+                            if obj.__class__.__name__ == tokens[0]]
+        if obj_list:
+            print(obj_list)
 
     def help_all(self):
-        print(cleandoc(self.do_all.__doc__), "\n")
+        print(cleandoc(self.do_all.__doc__), '\n')
 
     def do_update(self, line):
+
         """
         Name
         ----
@@ -344,8 +334,8 @@ class HBNBCommand(cmd.Cmd):
             `** attribute name missing **`  [attribute name] not given.
             `** value missing **`       [attribute value] not given
         """
-        tokens = self.parse_line(
-            line, m=True, c=True, i=True, n=True, a=True, v=True)
+        tokens = self.parse_line(line, m=True, c=True, i=True,
+                                 n=True, a=True, v=True)
         if tokens:
             # convert to integer or float if possible
             try:
@@ -356,13 +346,104 @@ class HBNBCommand(cmd.Cmd):
                 except ValueError:
                     pass
             # update or add the attribute and it value
-            obj = models.storage.all()[f"{tokens[0]}.{tokens[1]}"]
+            obj = models.storage.all()[f'{tokens[0]}.{tokens[1]}']
             obj.__dict__.update({tokens[2]: tokens[3]})
             obj.save()
 
+    def update_with_dict(self, arg_list):
+        """Updates an instance based on a dictionary"""
+        key = f'{arg_list[0]}.{arg_list[1]}'
+
+        if key in models.storage.all():
+            obj = models.storage.all()[key]
+            obj.__dict__.update(arg_list[2])
+        else:
+            print('** no instance found **')
+
     def help_update(self):
-        print(cleandoc(self.do_update.__doc__), "\n")
+        print(cleandoc(self.do_update.__doc__), '\n')
+
+    def count(self, class_name):
+        """Print the total number of instances of a particular class"""
+        count = 0
+        objs = models.storage.all()
+        for obj in objs:
+            obj_class_name = obj.split('.')[0]
+            if class_name == obj_class_name:
+                count += 1
+        print(count)
+
+    def parse_line(self, line, m=False, c=False, i=False,
+                   n=False, a=False, v=False):
+        """
+        Tokenize the input line and perform optional checks.
+
+        All checks are disabled by default and can be enabled by the caller.
+
+        Args:
+            line (str): The input line to be tokenized.
+            m (bool): Flag to enable check for missing class.
+            c (bool): Flag to enable check for class.
+            i (bool): Flag to enable check for ID.
+            n (bool): Flag to enable check for instance.
+            a (bool): Flag to enable check for attribute.
+            v (bool): Flag to enable check for value.
+
+        Returns:
+            list: Tokens extracted from the input line.
+            Returns None if an error occurs.
+        """
+        from shlex import split
+        # check for errors based on flags pass
+        tokens = split(line)
+        if m and line == '':
+            print('** class name missing **')
+        elif c and tokens[0] not in models.classes:
+            print("** class doesn't exist **")
+        elif i and len(tokens) < 2:
+            print('** instance id missing **')
+        elif n and f'{tokens[0]}.{tokens[1]}' not in models.storage.all():
+            print('** no instance found **')
+        elif a and len(tokens) < 3:
+            print('** attribute name missing **')
+        elif v and len(tokens) < 4:
+            print('** value missing **')
+        else:
+            return tokens  # success, all checks pass
+
+    @staticmethod
+    def extract_all(method):
+        """Extract all arguments from the command name method"""
+        # capture   (id)    (dictionary or attribute name) (attribute value)
+        pattern = r"\(\s*([^,]*)\s*,?\s*(\{.+\}|[^,]*)\s*,?\s*([^,]*)\)"
+        match = re.search(pattern, method)
+
+        if match:
+            args = [grp.strip("'") for grp in match.groups() if grp != '']
+        return args
+
+    @staticmethod
+    def string_to_dict(string):
+        """
+        Converts a string to a dictionary if the string is in a dictionary
+        representations.
+        """
+        dict_pattern = r'^\s*\{\s*([\'"][^\'"]*[\'"]\s*:.+\s*,?\s*)*\}\s*$'
+
+        if re.match(dict_pattern, string):
+            import ast
+            try:
+                obj = ast.literal_eval(string)
+                if isinstance(obj, dict):
+                    return obj
+            except (ValueError, SyntaxError):
+                pass
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    # import sys
+    # if sys.stdin.isatty():  # interactive mode
     HBNBCommand().cmdloop()
+    # else:  # non interactive mode
+    #     input_data = sys.stdin.read()
+    #     HBNBCommand().onecmd(input_data)
