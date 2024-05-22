@@ -64,24 +64,25 @@ class HBNBCommand(cmd.Cmd):
         if class_name in models.classes and len(tokens) > 1:
             method = tokens[1]
             arg_list = self.extract_all(method)
-            cmd_dict = {'all': self.do_all,
-                        'count': self.count,
-                        'show': self.do_show,
-                        'destroy': self.do_destroy,
-                        'update': self.do_update
-                        }
+            if isinstance(arg_list, list):
+                cmd_dict = {'all': self.do_all,
+                            'count': self.count,
+                            'show': self.do_show,
+                            'destroy': self.do_destroy,
+                            'update': self.do_update
+                            }
 
-            cmd_name = method[:method.find('(')]
-            if cmd_name == 'update' and len(arg_list) == 2:
-                obj = self.string_to_dict(arg_list[1])
-                # treat 'update' differently when a dictionary is passed
-                if obj is not None:
-                    arg_list[1] = obj
-                    arg_list.insert(0, class_name)
-                    return self.update_with_dict(arg_list)
-            if cmd_name in cmd_dict:
-                line = class_name + ' ' + ' '.join(arg_list)
-                return cmd_dict[cmd_name](line.strip())
+                cmd_name = method[:method.find('(')]
+                if cmd_name == 'update' and len(arg_list) == 2:
+                    obj = self.string_to_dict(arg_list[1])
+                    # treat 'update' differently when a dictionary is passed
+                    if obj is not None:
+                        arg_list[1] = obj
+                        arg_list.insert(0, class_name)
+                        return self.update_with_dict(arg_list)
+                if cmd_name in cmd_dict:
+                    line = class_name + ' ' + ' '.join(arg_list)
+                    return cmd_dict[cmd_name](line.strip())
 
         super().default(line)
 
@@ -415,11 +416,13 @@ class HBNBCommand(cmd.Cmd):
     def extract_all(method):
         """Extract all arguments from the command name method"""
         # capture   (id)    (dictionary or attribute name) (attribute value)
-        pattern = r"\(\s*([^,]*)\s*,?\s*(\{.+\}|[^,]*)\s*,?\s*([^,]*)\)"
+        pattern = r"\(\s*([^,]*)\s*,?\s*(\{.+\}|[^,])?\s*,?\s*([^,]*)\)"
         match = re.search(pattern, method)
 
+        args = None
         if match:
             args = [grp.strip("'") for grp in match.groups() if grp != '']
+
         return args
 
     @staticmethod
