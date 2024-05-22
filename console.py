@@ -416,7 +416,7 @@ class HBNBCommand(cmd.Cmd):
     def extract_all(method):
         """Extract all arguments from the command name method"""
         # capture   (id)    (dictionary or attribute name) (attribute value)
-        pattern = r"\(\s*([^,]*)\s*,?\s*(\{.+\}|[^,])?\s*,?\s*([^,]*)\)"
+        pattern = r"\(\s*([^,]*)\s*,?\s*(\{.+\}|[^,]*)?\s*,?\s*([^,]*)\)"
         match = re.search(pattern, method)
 
         args = None
