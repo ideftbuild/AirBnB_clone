@@ -421,7 +421,7 @@ class HBNBCommand(cmd.Cmd):
 
         args = None
         if match:
-            args = [grp.strip("'") for grp in match.groups() if grp != '']
+            args = [grp.strip("'") for grp in match.groups() if grp]
 
         return args
 
