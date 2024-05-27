@@ -2,6 +2,7 @@ header {
     top: 0px;
     height: 70px;
     width: 100%;
+    position: sticky;
     border-bottom: 1px solid #CCCCCC;
     display: flex;
     justify-content: flex-start;
