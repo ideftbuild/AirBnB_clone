@@ -13,8 +13,23 @@ body {
 .container {
     max-width: 1000px;
     margin: 30px auto;
+    padding-bottom: 50px;
 }
 
 h1 {
-    font-size: 2em;
+  font-size: 2rem; /* Custom font size for <h1> */
+}
+
+h2 {
+  font-size: 1.5rem; /* Custom font size for <h2> */
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 2.5rem; /* Larger font size for <h1> on larger screens */
+  }
+
+  h2 {
+    font-size: 2rem; /* Larger font size for <h2> on larger screens */
+  }
 }
